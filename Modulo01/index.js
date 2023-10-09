@@ -7,6 +7,37 @@ server.use(express.json())
 
 const cursos = ['Node Js', 'JavaScript', 'React Native']
 
+
+//Middleware Global
+server.use((req, res, next)=>{
+
+  console.log(`URL CHAMADA: ${req.url}`)
+
+  return next()
+})
+
+function checkCurso(req, res, next){
+
+  if(!req.body.name){
+    return res.status(400).json({error: "Nome do curso é obrigatorio"})
+  }
+
+  return next()
+}
+
+function checkIndexCurso(req, res, next){
+
+  const curso = cursos[req.params.index]
+
+  if(!curso){
+    return res.status(400).json({error: "Curso não existe"})
+  }
+
+  req.curso = curso
+
+  return next() 
+}
+
 //Query params = Parametros passados na frente das rotas como por exemplo ?nome=Nodejs
 
 //Route params = Parametros passados diretamente na rota para acessar recursos cursos/2
@@ -18,11 +49,9 @@ const cursos = ['Node Js', 'JavaScript', 'React Native']
 //res = Representa dados e informações da nossa resposta
 
 //Buscando curso especifico via index
-server.get('/cursos/:index', (req, res)=>{ 
+server.get('/cursos/:index', checkIndexCurso, (req, res)=>{ 
 
-  const { index } = req.params;
-
-  return res.json( cursos[index] )
+  return res.json( req.curso )
 
 })
 
@@ -30,7 +59,7 @@ server.get('/cursos/:index', (req, res)=>{
 server.get('/cursos', (req, res)=>{ return res.json(cursos)})
 
 //Cadastrando novo curso
-server.post('/cursos', (req, res)=>{
+server.post('/cursos', checkCurso, (req, res)=>{
 
   const {name} = req.body
 
@@ -40,7 +69,7 @@ server.post('/cursos', (req, res)=>{
 })
 
 //Atualizando curso via index
-server.put('/cursos/:index', (req, res)=>{
+server.put('/cursos/:index', checkCurso, checkIndexCurso, (req, res)=>{
 
   const { index } = req.params
 
@@ -53,7 +82,7 @@ server.put('/cursos/:index', (req, res)=>{
 
 
 //Excluindo curso via index
-server.delete('/cursos/:index', (req, res)=>{
+server.delete('/cursos/:index', checkIndexCurso, (req, res)=>{
 
   const { index } = req.params
 
