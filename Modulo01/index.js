@@ -2,7 +2,7 @@ const express = require('express');
 
 const server = express();
 
-const cursos = ['Node Js', 'JavaScript', 'React Native']
+const cursos = ['Node Js', 'JavaScript1', 'React Native']
 
 //Query params = Parametros passados na frente das rotas como por exemplo ?nome=Nodejs
 
