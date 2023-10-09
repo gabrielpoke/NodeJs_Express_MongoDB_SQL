@@ -2,6 +2,7 @@ const express = require('express');
 
 const server = express();
 
+const cursos = ['Node Js', 'JavaScript', 'React Native']
 
 //Query params = Parametros passados na frente das rotas como por exemplo ?nome=Nodejs
 
@@ -12,11 +13,11 @@ const server = express();
 //req = Representa dados da nossa requisição
 
 //res = Representa dados e informações da nossa resposta
-server.get('/cursos/:id', (req, res)=>{ 
+server.get('/cursos/:index', (req, res)=>{ 
 
-  const id = req.params.id;
+  const { index } = req.params;
 
-  return res.json({"curso": `Aprendendo ${id}`})
+  return res.json( cursos[index] )
 
 })
 
